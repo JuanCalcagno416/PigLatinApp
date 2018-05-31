@@ -1,0 +1,6 @@
+{
+    "dbUrl":  "mongodb://localhost:27017/pigAppDB",
+    "port": "8080",
+    "jwt":"assignment"
+}
+  

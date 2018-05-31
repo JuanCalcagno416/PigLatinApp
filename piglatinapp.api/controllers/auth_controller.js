@@ -4,14 +4,16 @@ import config from '../config/config';
 
 module.exports = {
     
-    access: () => {
+    access: (req,res) => {
+        console.log(req.body)
         User.findOne({$or:[{"email":req.body.email},{"username":req.body.username}]})
             .then(user => {
+                console.log(user)
                 if(user != null){
                     if(user.email == req.body.email || user.username == req.body.username) {
-                        console.log('logeando')
+                        return res.json('logeando')
                     } else {
-                        console.log("No es el correo o el username")
+                        return res.json("No es el correo o el username")
                     }
                     
                 } else {

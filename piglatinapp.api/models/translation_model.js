@@ -14,102 +14,172 @@ const TranslationSchema = new mongoose.Schema({
 TranslationSchema.statics = {
 
     translateWord: (textToTranslate,user,cb) => {
-
-        if (/\s/.test(textToTranslate)) var splitString = textToTranslate.split(" ");
-        console.log(splitString)
-
-        if(splitString == undefined){
-            
-            let firstLetter = textToTranslate.charAt(0)
-
-            Translation.checkFirstLetter(firstLetter,textToTranslate.toLowerCase(),(completeWord) => {
-        
-                let translation = new Translation({
-                    oldText:textToTranslate.toLowerCase(),
-                    newText:completeWord
-                });
-                translation.userId = user._id
-
-                cb(null,translation)
-
-            });
+        console.log(textToTranslate)
+        if(textToTranslate == "" || /\s/g.test(textToTranslate) && textToTranslate == "") {
+            cb(null,{"error":"You cannot leave this in blank"});
         }else {
-            
-        }
-
-    },
-
-
-    checkFirstLetter: (firstLetter,text,cb) => {
-        console.log("Checking first letter");
-        switch (firstLetter) {
-            case "a":
-            Translation.vocalMethod(text,cb)
-            break;
-            case "e":
-            Translation.vocalMethod(text,cb)
-            break;
-            case "i":
-            Translation.vocalMethod(text,cb)
-                break;
-            case "o":
-            Translation.vocalMethod(text,cb)
-                break;
-            case "u":
-            Translation.vocalMethod(text,cb)
-                break;
-            default :
-            Translation.consonantMethod(text,cb)
-            break;
-        }
-    },
-
-    vocalMethod: (text,cb) => {
-        console.log("Vocal method, letter ->   " + text)
-        return cb(text+"way")
-    },
-
-    consonantMethod: (completeWord,cb) => {
-        let savedConsonantLetters = [];
-        let i = 0;
-
-        console.log("Consonant method, letter ->   " + completeWord)
-
-        // Check word until it for letters 
-
-        while (i<completeWord.length){
-            let l = completeWord.charAt(i);
-
-            // Check for vocal  
-            if(l == "a" || l == "e" || l == "i" || l == "o" || l == 'u') {
-                console.log('Loop - ' +i+' se topo con una vocal');
-                if(savedConsonantLetters[0] == 'q' && l == 'u'){
-                    savedConsonantLetters.push(l);
-                    completeWord = completeWord.replace(l,'');
+            if (/\s/.test(textToTranslate)) {
+                var splitSentence = textToTranslate.split(" ");
+    
+                // Delete whitespace in array
+                splitSentence = splitSentence.filter(function(str) {
+                    return /\S/.test(str);
+                });               
+                
+                // One Word with spaces
+                if(splitSentence.indexOf(textToTranslate.replace(/\s+/g,'')) > -1){
+                console.log("--------- One word with spaces")                
+                    splitSentence = undefined;
+                    Translation.checkLetters(textToTranslate.toLowerCase().replace(/\s+/g,''),{splitSentence,user,cb});
                 }else {
-                    break
+                    console.log("--------- Sentences")                
+                    Translation.checkLetters(textToTranslate.toLowerCase(),{splitSentence,user,cb});
                 }
+                
             }else {
-                // Check for consonants, delete letters in word and add them to an array                
-                savedConsonantLetters.push(l);
-                completeWord = completeWord.replace(l,'');
+                console.log("--------- Word without space")
+                Translation.checkLetters(textToTranslate.toLowerCase().replace(/\s+/g,''),{splitSentence,user,cb});
             }
         }
-    
+    },
 
-        // Append consonant letters that it found before first vocal
-        for(var j = 0;j < savedConsonantLetters.length; j++) {
-            console.log(savedConsonantLetters[j])
-            completeWord = completeWord + savedConsonantLetters[j];
+
+    checkLetters: (textToTranslate,{splitSentence,user,cb}) => {
+        var finalWords = [];
+        // If its a sentence 
+        if(splitSentence != undefined) {
+            console.log("Checking for letters in sentences");
+            console.log(splitSentence)
+        // Check for letters in word of sentences
+            for(var i = 0;i<splitSentence.length;i++) {
+                console.log(i)
+                console.log(splitSentence[i]);
+
+                    if(['a','e','i','o','u'].includes(splitSentence[i].toLowerCase().charAt(0))){
+                        console.log('The word -> ' + splitSentence[i] + " begins with vocal");
+                        Translation.vocalMethod(splitSentence[i],{splitSentence,finalWords,user,cb})
+                    }else {
+                        console.log('The word -> ' + splitSentence[i] + " begins with consonant");
+                        Translation.consonantMethod(splitSentence[i],{splitSentence,finalWords,user,cb})
+                    }
+            }
+        // If its a word
+        }else {
+            console.log("Checking for letter in word");
+            if(['a','e','i','o','u'].includes(textToTranslate.charAt(0))){
+                console.log('The word -> ' + textToTranslate + " begins with vocal");
+                Translation.vocalMethod(textToTranslate,{splitSentence,finalWords,user,cb})
+            }else {
+                console.log('The word -> ' + textToTranslate + " begins with consonant");
+                Translation.consonantMethod(textToTranslate,{splitSentence,finalWords,user,cb})
+            }
         }
+    },
+    vocalMethod: (word,{splitSentence,finalWords,user,cb}) => {
+
+        // TRANSLATING MORE THAN TWO WORDS WITH VOCALS AT THE BEGINNING
+        if(splitSentence != undefined) {
+            console.log('translating more than one word')
+            finalWords.push(word+"way")
+                if(splitSentence.length == finalWords.length) {
+                    Translation.saveTranslation(splitSentence.join(' '),finalWords.join(' '),user,cb);
+                }
+        // TRANSLATING JUST ONE WORD                
+        }else {
+            console.log('translating just one word')
+            finalWords.push(word+'way');
+            console.log(finalWords);
+            Translation.saveTranslation(word,finalWords[0],user,cb);
+        }
+    },
+    consonantMethod: (word,{splitSentence,finalWords,user,cb}) => {
+
+        // TRANSLATING MORE THAN ONE CONSONANT WORD
+        if(splitSentence != undefined){
+            console.log('translating more than one consonant word')
+            let savedConsonantLetters = [];
+            let i = 0;
         
-        // Adding 'ay'
-            completeWord = completeWord + 'ay';
+            while (i<word.length){
+                let l = word.charAt(0);
+    
+                // Check for vocal  
+                if(['a','e','i','o','u'].includes(l)) {
+                    console.log('Loop - ' +i+' se topo con una vocal');
+                    if(savedConsonantLetters[0] == 'q' && l == 'u'){
+                        savedConsonantLetters.push(l);
+                        word = word.replace(l,'');
+                    }else {
+                        break
+                    }
+                }else {
+                    // Check for consonants, delete letters in word and add them to an array                
+                    savedConsonantLetters.push(l);
+                    word = word.replace(l,'');
+                }
+            }
+        
+    
+            // Append consonant letters that it found before first vocal
+            for(var j = 0;j < savedConsonantLetters.length; j++) {
+                word = word + savedConsonantLetters[j];
+            }
+            
+            // Adding 'ay'
+            word = word + 'ay';
+            if(splitSentence.length == finalWords.length) {
+                Translation.saveTranslation(splitSentence.join(' '),finalWords.join(' '),user,cb);
+            }
+            // TRANSLATING JUST ONE CONSONANT WORD
+        }else {
+            console.log('translating one consonant word')
+            var oldWord = word;
+            let savedConsonantLetters = [];
+            let i = 0;
+        
+            while (i<word.length){
+                let l = word.charAt(i);
+    
+                // Check for vocal  
+                if(['a','e','i','o','i'].includes(l)) {
+                    console.log('Loop - ' +i+' se topo con una vocal');
+                    if(savedConsonantLetters[0] == 'q' && l == 'u'){
+                        savedConsonantLetters.push(l);
+                        word = word.replace(l,'');
+                    }else {
+                        break
+                    }
+                }else {
+                    // Check for consonants, delete letters in word and add them to an array                
+                    savedConsonantLetters.push(l);
+                    word = word.replace(l,'');
+                }
+            }
+        
+    
+            // Append consonant letters that it found before first vocal
+            for(var j = 0;j < savedConsonantLetters.length; j++) {
+                word = word + savedConsonantLetters[j];
+            }
+            
+            // Adding 'ay'
+            word = word + 'ay';
+            Translation.saveTranslation(oldWord,word,user,cb);
+        }
+    
+    },
+    saveTranslation: (oldString,newString,user,cb) => {
+        console.log('Saving Translation')
+        console.log(newString)
+        let translation = new Translation({
+            oldText:oldString.toLowerCase(),
+            newText:newString.toLowerCase()
+        });
+        
+        translation.userId = user._id
+            return cb(null,translation);
 
-        console.log(completeWord)
-        return cb(completeWord)
     }
-
 
 }
 

@@ -3,7 +3,7 @@ import mongoose     from 'mongoose'
 const TranslationSchema = new mongoose.Schema({
     oldText:    {type:String},
     newText:    {type:String},
-    userId:     {type:mongoose.Schema.ObjectId,ref:'User'},
+    user_id:     {type:mongoose.Schema.ObjectId,ref:'User'},
 
     created_at: {
         type:Date,
@@ -29,32 +29,21 @@ TranslationSchema.statics = {
                  
                 // ONE WORD WITH WHITESPACES 
                 if(splitSentence.indexOf(textToTranslate.replace(/\s+/g,'')) > -1){
-                console.log("TranslateWord --------- One word with spaces")                
+                console.log("Method: TranslateWord --- One word with spaces")                
    
-                    // if(/(\w-\w)|&/.test(textToTranslate)) {
-                    //     splitSentence = textToTranslate.split("-");
-                    //     var hyphen = true;
-                    //     console.log(textToTranslate);
-                    //     console.log(hyphen)
                         Translation.checkLetters(textToTranslate.toLowerCase().replace(/\s+/g,''),{splitSentence,user,cb});
 
-                    // }else {
-                    //     splitSentence = undefined;
-                    //     Translation.checkLetters(textToTranslate.toLowerCase().replace(/\s+/g,''),{splitSentence,user,cb});
-                    // }
-
                 }else {
-                    console.log("TranslateWord --------- Sentences")   
+                    console.log("Method: TranslateWord --- Sentences")   
                     Translation.checkLetters(textToTranslate.toLowerCase(),{splitSentence,user,cb});
                 }
                 // WORD WITHOUT SPACE
             }else {
-                console.log("TranslateWord --------- Word without space")
+                console.log("Method: TranslateWord --- Word without space")
                 console.log(textToTranslate)
             
                 if (/(\w-\w)/g.test(textToTranslate)){
                     var hyphen = true;
-                    console.log('TIENE GUION')
                     splitSentence = textToTranslate.split("-"); 
                     Translation.checkLetters(textToTranslate.toLowerCase().replace(/\s+/g,''),{splitSentence,hyphen,user,cb});
                 }else{
@@ -69,7 +58,7 @@ TranslationSchema.statics = {
         var finalWords = [];
         // If its a sentence 
         if(splitSentence != undefined) {
-            console.log("CheckLetters ------ Checking for letters in sentences");
+            console.log("Method: CheckLetters --- Checking for letters in sentences");
             console.log(hyphen)
             console.log(splitSentence)
 
@@ -82,24 +71,14 @@ TranslationSchema.statics = {
                 console.log(i)
                 console.log(splitSentence[i]);
                 if(/(\w-\w)/g.test(splitSentence[i])) {
-                    console.log('TIENE hyphen')
                     console.log(splitSentence[i])
                     hyphenwords = splitSentence[i].split('-')
                     var hyphen = true;
                     indexOfHypenWords.push(i)
-                   
-                    // indexOfHypenWords.push( hyphenwords.map((word) => {
-                    //     return word
-                    // }));
-                    
-                    console.log(hyphenwords);
-
                     for(var y = 0;y<hyphenwords.length;y++){
                         newSplitSentence.push(hyphenwords[y])
-                        // indexOfHypenWords.push(hyphenwords[y])
                     }
 
-               
                     i++
                 }else {
                     newSplitSentence.push(splitSentence[i])
@@ -128,7 +107,7 @@ TranslationSchema.statics = {
         // If its a word
         }else {
 
-            console.log("CheckLetters ------  for letter in word");
+            console.log("Method: CheckLetters ---  for letter in word");
             if(['a','e','i','o','u'].includes(textToTranslate.charAt(0))){
                 console.log('The word -> ' + textToTranslate + " begins with vocal");
                 Translation.vocalMethod(textToTranslate,{splitSentence,finalWords,user,cb})
@@ -139,12 +118,12 @@ TranslationSchema.statics = {
         }
     },
     vocalMethod: (word,{splitSentence,newSplitSentence,finalWords,hyphen,indexOfHypenWords,user,cb}) => {
-        console.log('----------------- EN VOCAL METHOD')
+        console.log('Method: VocalMethod ----')
         console.log(newSplitSentence)
         console.log(indexOfHypenWords);
         // TRANSLATING MORE THAN TWO WORDS WITH VOCALS AT THE BEGINNING
         if(splitSentence != undefined || newSplitSentence != undefined) {
-            console.log('VocalMethod -------- Translating more than one word in vocal')
+            console.log('Method: VocalMethod --- Translating more than one word in vocal')
             console.log(word)
             console.log(finalWords)
             finalWords.push(word+"way")
@@ -153,9 +132,9 @@ TranslationSchema.statics = {
                 if(splitSentence != undefined){
                     if(splitSentence.length == finalWords.length) {
                         if(hyphen == true){
-                            Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,user,cb);
+                            Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{user,cb});
                         }else {
-                            Translation.saveTranslation(splitSentence.join(' '),finalWords.join(' '),user,cb);
+                            Translation.saveTranslation(splitSentence.join(' '),finalWords.join(' '),indexOfHypenWords,{user,cb});
                         }
                     }
                 }else {
@@ -163,27 +142,27 @@ TranslationSchema.statics = {
                         if(hyphen == true){
                             Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,user,cb);
                         }else {
-                            Translation.saveTranslation(newSplitSentence.join(' '),finalWords.join(' '),user,cb);
+                            Translation.saveTranslation(newSplitSentence.join(' '),finalWords.join(' '),indexOfHypenWords,{user,cb});
                         }
                     }
                 }
         // TRANSLATING JUST ONE WORD                
         }else {
-            console.log('VocalMethod ------- Translating just one word')
+            console.log('Method: VocalMethod --- Translating just one word')
             
             finalWords.push(word+'way');
             console.log(finalWords);
-            Translation.saveTranslation(word,finalWords[0],user,cb);
+            Translation.saveTranslation(word,finalWords[0],indexOfHypenWords,{user,cb});
         }
     },
     consonantMethod: (word,{splitSentence,newSplitSentence,finalWords,hyphen,indexOfHypenWords,user,cb}) => {
-        console.log('----------------- EN CONSONANT METHOD')
+        console.log('Method: ConsonantMethod ----')
         console.log(newSplitSentence)
         console.log(indexOfHypenWords)
 
         // TRANSLATING MORE THAN ONE CONSONANT WORD
         if(splitSentence != undefined || newSplitSentence != undefined){
-            console.log('-------- Translating more than one word in consonant')
+            console.log('Method: ConsonantMethod --- Translating more than one word in consonant')
             console.log(word)
             console.log(finalWords)
             console.log(splitSentence)
@@ -217,7 +196,7 @@ TranslationSchema.statics = {
                 word = word + savedConsonantLetters[j];
             }
             
-            console.log('ConsonantMethod  ------- Adding AY ')
+            console.log('Method: ConsonantMethod --- Adding AY ')
             // Adding 'ay'
             word = word + 'ay';
             finalWords.push(word);
@@ -229,30 +208,28 @@ TranslationSchema.statics = {
             if(splitSentence != undefined){
                 if(splitSentence.length == finalWords.length) {
                     if(hyphen == true){
-                        console.log('GRABANDO CONSONNANT')
                         console.log(indexOfHypenWords)
                         
-                        Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,user,cb);
+                        Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{user,cb});
                     }else {
-                        Translation.saveTranslation(splitSentence.join(' '),finalWords.join(' '),user,cb);
+                        Translation.saveTranslation(splitSentence.join(' '),finalWords.join(' '),indexOfHypenWords,{user,cb});
                     }
                 }
             }else {
                 if(newSplitSentence.length == finalWords.length) {
-                    console.log('CASI  GRABANDO')
                     console.log(newSplitSentence);
                     console.log(finalWords)
                     if(hyphen == true){
-                        Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,user,cb);
+                        Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{user,cb});
                     }else {
-                        Translation.saveTranslation(newSplitSentence.join(' '),finalWords.join(' '),user,cb);
+                        Translation.saveTranslation(newSplitSentence.join(' '),finalWords.join(' '),indexOfHypenWords,{user,cb});
                     }
                 }
             }
 
             // TRANSLATING JUST ONE CONSONANT WORD
         }else {
-            console.log('ConsonantMethod -------- translating one consonant word')
+            console.log('Method: ConsonantMethod --- translating one consonant word')
             var oldWord = word;
             var savedConsonantLetters = [];
             var i = 0;
@@ -284,17 +261,12 @@ TranslationSchema.statics = {
                 }else {
                     // Check for consonants, delete letters in word and add them to an array
                   
-                    console.log('Chqueando consonantes ya que no hay vocales -- ' + i)
-                    console.log(l)
                     savedConsonantLetters.push(l);
                     word = word.replace(l,'');
                     count = count + 1;
-                    console.log('SE ACABA DE QUITAR   ' + l + "en word -> " + word);
-                    console.log(savedConsonantLetters)
-                    console.log(count)
+    
 
                 }
-                console.log('Ultima linea del loop -- ' + i)
             }
         
     
@@ -307,45 +279,55 @@ TranslationSchema.statics = {
             
             // Adding 'ay'
             word = word + 'ay';
-            Translation.saveTranslation(oldWord,word,user,cb);
+            Translation.saveTranslation(oldWord,word,indexOfHypenWords,{user,cb});
         }
     
     },
-    saveTranslation: (oldString,newString,indexOfHypenWords,user,cb) => {
-        console.log('Saving Translation')
-        console.log(newString.toString())
-        // console.log(oldString)
-        console.log(indexOfHypenWords)
-        
-        for(var x = 0;x<indexOfHypenWords.length;x++){
+    saveTranslation: (oldString,newString,indexOfHypenWords,{user,cb}) => {
+        console.log('Method: Saving Translation ----')
+      
+        if(indexOfHypenWords != undefined && indexOfHypenWords.length >= 1){
+            var minus = 0
+            
+            indexOfHypenWords.length == 1 ? minus = 0 : minus = 1
+            
+            for(var x = 0;x<indexOfHypenWords.length;x++){
+    
+                
+                newString.splice(indexOfHypenWords[x],indexOfHypenWords.length-minus,newString[indexOfHypenWords[x]]+"-"+newString[indexOfHypenWords[x]+1]).join(' ')
+                
+                let translation = new Translation({
+                    oldText:oldString.join(' ').toLowerCase(),
+                    newText:newString.join(' ').toLowerCase()
+                });
+                
+                translation.user_id = user._id
 
+                translation.save()
+                .then((translation) =>{
+                    return cb(null,translation);
+                })
+                .catch((err) => {
+                    cb(err,null)
+                })            }
 
-        //     // [ 'andrea', 'ricardo-nacho', 'pablo', 'jose-franco' ]
-            console.log(newString[indexOfHypenWords[x]])
-            console.log(indexOfHypenWords[x])
+        }else {
+            let translation = new Translation({
+                oldText:oldString.toLowerCase(),
+                newText:newString.toLowerCase()
+            });
+            
+            translation.user_id = user._id
 
-            console.log(newString.toString())
-            newString.splice(indexOfHypenWords[x],indexOfHypenWords.length-1,newString[indexOfHypenWords[x]]+"-"+newString[indexOfHypenWords[x]+1]).join(' ')
-            console.log('AFTER SPLICE')
-            console.log(newString.toString())
-
+            translation.save()
+                .then((translation) =>{
+                    return cb(null,translation);
+                })
+                .catch((err) => {
+                    cb(err,null)
+                })
         }
 
-        // console.log('YA')
-        return cb(null,{old:oldString.join(' '),new:newString.join(' ')})
-
-        // for (var y = 0;y<newString.length;y++){
-        //     // console.log(y)
-        //     for(var x = 0;x<indexOfHypenWords.length;x++){
-        //         // console.log(indexOfHypenWords[x])
-        //         if(newString[y] == indexOfHypenWords[x]){
-        //             console.log('AJA')
-        //         }
-        //     }
-        //     // console.log(newString.toString())    
-        //     // console.log('AFTER SPLICE')
-        //     // console.log(newString.toString())
-        // }
     }
 }
 

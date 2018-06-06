@@ -5,5 +5,6 @@ const ROUTER = express.Router();
 
 ROUTER.route('/')
     .post(trasnlationController.translate)
+    .get(trasnlationController.getTranslationsFromUser)
 
 export default ROUTER;

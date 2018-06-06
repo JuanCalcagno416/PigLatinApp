@@ -8,6 +8,7 @@ const ROUTER = express.Router();
 
 ROUTER.use('/users', userRoutes);
 ROUTER.use('/login',authRoutes);
-ROUTER.use('/translate',interceptor,translationRoutes)
+ROUTER.use('/translate',interceptor,translationRoutes);
+ROUTER.use('/translations',interceptor,translationRoutes);
 
 export default ROUTER;

@@ -6,7 +6,7 @@ module.exports = {
     
     access: (req,res) => {
         console.log(req.body)
-        User.findOne({$or:[{"email":req.body.email},{"username":req.body.username}]})
+        User.findOne({"email":req.body.email})
             .then(user => {
                 if(user != null){
                     if(user.email == req.body.email || user.username == req.body.username) {
@@ -17,9 +17,9 @@ module.exports = {
                                     email:user.email,
                                     first_name:user.first_name
                                 }
-
-                                let token = jwt.sign(payload,config.jwt)
                                 
+                                let token = jwt.sign(payload,config.jwt)
+                                console.log(token)
                                 return res.json({
                                     "result":"Success",
                                     "token":token

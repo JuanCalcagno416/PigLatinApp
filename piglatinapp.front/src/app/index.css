@@ -1,0 +1,256 @@
+body{
+  /*   overflow: hidden;*/
+ /* width: 100%;
+  padding-left: 250px;*/
+ }
+ 
+ /*IMAGE UPLOAD*/
+ 
+ .nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+
+ 
+ /*POST SYSTEM*/
+ .post-container{
+     margin-top: 20px;
+     width: 100%;
+     border: 2px solid black;
+     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+ }
+ 
+ .post-body{
+   margin-top: 50px;
+ }
+ 
+ .buttom-margin{
+   padding-bottom: 30px;
+ }
+ .post-header {
+     margin-top: 3%;
+     margin-left: 1%;
+ }
+ 
+ .post-input{
+   font-family: "Roboto", sans-serif;
+   outline: 0;
+   background: #f2f2f2;
+   width: 100%;
+   border: 0;
+   margin: 0 0 15px;
+   padding: 15px;
+   box-sizing: border-box;
+   font-size: 14px;   
+ }
+ 
+ /*fonts and icon*/
+ 
+ .comunity-icon{
+     width: 30px;
+     height: 50px;
+     margin-right: 10px;
+ }
+ 
+ /*Divider*/
+ 
+ .divider{
+     margin-top: 30px;
+     border-color: black;
+ }
+ 
+ /*Tabs*/
+ .nav-tabs{
+     /* padding-left:30%; */
+ }
+ .nav-tabs a{
+     color:black;
+ }
+ .nav-tabs > li {
+     color: #337ab7;
+ }
+ 
+ .nav-tabs > li > a:hover {
+     border-color: #337ab7;
+         cursor: pointer;
+ }
+ 
+ /*Login Css*/
+ 
+ @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+ 
+ .login-page {
+   width: 360px;
+   padding: 8% 0 0;
+   margin: auto;
+ }
+ .form {
+   position: relative;
+   z-index: 1;
+   background: #FFFFFF;
+   max-width: 360px;
+   margin: 0 auto 100px;
+   margin-top: 50px;
+   padding: 45px;
+   text-align: center;
+   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+ }
+ .form input {
+   font-family: "Roboto", sans-serif;
+   outline: 0;
+   background: #f2f2f2;
+   width: 100%;
+   border: 0;
+   margin: 0 0 15px;
+   padding: 15px;
+   box-sizing: border-box;
+   font-size: 14px;
+ }
+ .form button {
+     font-family: "Roboto", sans-serif;
+     text-transform: uppercase;
+     outline: 0;
+     background:black;
+     width: 100%;
+     border: 0;
+     padding: 15px;
+     color: #FFFFFF;
+     font-size: 14px;
+     transition: background 0.5s ease;
+     cursor: pointer;
+ }
+ .form button:active{
+     vertical-align: top;
+     padding: 20px 13px 10px;
+ }
+ .form button:hover{
+     background-color: white;
+     color:black;
+     border:1px solid black;
+ }
+ .form .message {
+   margin: 15px 0 0;
+   color: #b3b3b3;
+   font-size: 12px;
+ }
+ .form .message a {
+   color: #4CAF50;
+   text-decoration: none;
+ }
+ .form .register-form {
+   display: none;
+ }
+ /*login Close*/
+ 
+ .wrapper {
+     padding-left: 0;
+     -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+     -o-transition: all 0.5s ease;
+     transition: all 0.5s ease;
+ }
+ 
+ .wrapper.toggled {
+     padding-left: 250px;
+ }
+ 
+ #sidebar-wrapper {
+     z-index: 1000;
+     position: fixed;
+     left: 250px;
+     width: 0;
+     height: 100%;
+     margin-left: -250px;
+     overflow-y: auto;
+     background: #ffff00;
+     -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+     -o-transition: all 0.5s ease;
+     transition: all 0.5s ease;
+ -webkit-box-shadow: 5px 3px 22px -10px rgba(0,0,0,0.75);
+ -moz-box-shadow: 5px 3px 22px -10px rgba(0,0,0,0.75);
+ box-shadow: 5px 3px 22px -10px rgba(0,0,0,0.75);
+ }
+ 
+ .wrapper.toggled #sidebar-wrapper {
+     width: 250px;
+ }
+ 
+ #page-content-wrapper {
+     width: 100%;
+     position: absolute;
+     padding: 15px;
+ }
+ 
+ .wrapper.toggled #page-content-wrapper {
+     position: absolute;
+     margin-right: -250px;
+ }
+ 
+ /* Sidebar Styles */
+ 
+ .sidebar-nav {
+     position: absolute;
+     top: 60;
+     width: 250px;
+     margin: 0;
+     margin-top: 48%;
+     padding: 0;
+     list-style: none;
+     font-size: 16px;
+ 
+ }
+ 
+ .sidebar-nav li {
+     text-indent: 20px;
+     line-height: 40px;
+ }
+ 
+ .sidebar-nav li a {
+     display: block;
+     text-decoration: none;
+     color: black;
+     margin-top: 20px;
+ }
+ 
+ .sidebar-nav li a:hover {
+     text-decoration: none;
+     color: #fff;
+     background: rgba(74, 70, 70, 0.58);
+     cursor: pointer;
+ }
+ 
+ .sidebar-nav li a:active,
+ .sidebar-nav li a:focus {
+     text-decoration: none;
+ }
+ 
+ .brand {
+     height: 65px;
+     font-size: 18px;
+     line-height: 60px;
+     margin-left: 30px;
+     margin-top: 40px;
+     color:black;
+ }
+ .brand-home h1{
+    color:black;
+
+ }
+ 
+ .sidebar-nav > .sidebar-brand a {
+     color: #999999;
+ }
+ 
+ .sidebar-nav > .sidebar-brand a:hover {
+     color: #fff;
+     background: none;
+ }
+ 
+ 

@@ -140,7 +140,7 @@ TranslationSchema.statics = {
                 }else {
                     if(newSplitSentence.length == finalWords.length) {
                         if(hyphen == true){
-                            Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,user,cb);
+                            Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{user,cb});
                         }else {
                             Translation.saveTranslation(newSplitSentence.join(' '),finalWords.join(' '),indexOfHypenWords,{user,cb});
                         }
@@ -152,7 +152,11 @@ TranslationSchema.statics = {
             
             finalWords.push(word+'way');
             console.log(finalWords);
-            Translation.saveTranslation(word,finalWords[0],indexOfHypenWords,{user,cb});
+            if(indexOfHypenWords != undefined){
+                Translation.saveTranslation(word,finalWords,indexOfHypenWords,{user,cb});
+            }else {
+                Translation.saveTranslation(word,finalWords[0],indexOfHypenWords,{user,cb});
+            }
         }
     },
     consonantMethod: (word,{splitSentence,newSplitSentence,finalWords,hyphen,indexOfHypenWords,user,cb}) => {
@@ -312,11 +316,22 @@ TranslationSchema.statics = {
                 })            }
 
         }else {
-            let translation = new Translation({
-                oldText:oldString.toLowerCase(),
-                newText:newString.toLowerCase()
-            });
+            console.log(indexOfHypenWords)
+            if(indexOfHypenWords != undefined && indexOfHypenWords.length >= 1) {
+                var translation = new Translation({
+                    oldText:oldString.join('-').toLowerCase(),
+                    newText:newString.join('-').toLowerCase()
+                });
+
+            }else {
+                 var translation = new Translation({
+                    oldText:oldString.toLowerCase(),
+                    newText:newString.toLowerCase()
+                });
+            }
             
+            console.log(translation)
+            console.log(user)
             translation.user_id = user._id
 
             translation.save()

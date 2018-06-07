@@ -18,7 +18,7 @@ module.exports = {
                                     first_name:user.first_name
                                 }
 
-                                let token = jwt.sign(payload,config.jwt,{expiresIn:"2h"})
+                                let token = jwt.sign(payload,config.jwt)
                                 
                                 return res.json({
                                     "result":"Success",

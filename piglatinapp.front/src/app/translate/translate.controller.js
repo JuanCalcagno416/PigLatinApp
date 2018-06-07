@@ -6,7 +6,7 @@ export class TranslateController {
       this.translateService = TranslateService;
       this.newTranslation = {};
       this.myTranslations = [];
-        console.log(this.myTranslations.length)
+          
     }
 
     translate() {
@@ -16,7 +16,7 @@ export class TranslateController {
   
           this.translateService.postTranslation(translation)    
             .then((response) => {
-              console.log(response.data)
+                
               this.newTranslation.oldText = response.data.oldText;
               this.newTranslation.newText = response.data.newText;
             })         
@@ -24,15 +24,15 @@ export class TranslateController {
     }
 
     getMyTranslations() {
-        console.log('get my translate')
+          
       this.translateService.getUserTranslations()    
         .then((response) => {
-            console.log(response.data)
+              
             // response.data.data.map((item) => {
                    this.myTranslations = response.data;
             // }) 
             
-            console.log(this.myTranslations)
+              
 
         })      
       
@@ -40,7 +40,6 @@ export class TranslateController {
 
     hideMyTranslations() {
       this.myTranslations = 0;
-      console.log(this.myTranslations.length)
     }
 
   }

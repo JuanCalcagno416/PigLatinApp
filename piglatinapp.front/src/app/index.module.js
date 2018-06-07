@@ -12,7 +12,7 @@ import { TranslateService } from './services/translate.service';
 import { TokenService } from './services/token.service';
 import { InterceptorService } from './services/interceptor.service';
 import { HomeController } from './home/home.controller';
-import { GithubContributorService } from '../app/components/githubContributor/githubContributor.service';
+// import { GithubContributorService } from '../app/components/githubContributor/githubContributor.service';
 import { WebDevTecService } from '../app/components/webDevTec/webDevTec.service';
 import { NavbarDirective } from '../app/components/navbar/navbar.directive';
 import { MalarkeyDirective } from '../app/components/malarkey/malarkey.directive';
@@ -24,7 +24,7 @@ angular.module('front', ['ngAnimate', 'ngCookies', 'ngTouch', 'ngSanitize', 'ngM
   .config(routerConfig)
   .run(runBlock)
   // SERVICES
-  .service('githubContributor', GithubContributorService)
+  // .service('githubContributor', GithubContributorService)
   .service('RegisterService', RegisterService)
   .service('TranslateService', TranslateService)
   .service('TokenService', TokenService)

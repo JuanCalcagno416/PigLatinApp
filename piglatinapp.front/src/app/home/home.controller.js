@@ -7,7 +7,7 @@ export class HomeController {
 
   
     greet(){
-      console.log("hola en home");
+        
     }
 
   }

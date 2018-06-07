@@ -33,7 +33,7 @@ export function routerConfig ($stateProvider, $urlRouterProvider,$injector) {
       controllerAs: 'translate',
       resolve: {
         security: function($q, $injector){
-          console.log('AJAASD MAMAGUEVO')
+            
           if (!$injector.get('TokenService').has()) {
             return $q.reject('NotAuthorized');
           }

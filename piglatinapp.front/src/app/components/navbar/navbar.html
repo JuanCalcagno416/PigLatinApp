@@ -15,9 +15,10 @@
     <div class="col-xs-12 text-center">
       <ul class="nav nav-tabs text-center">
         <li role="presentation" ui-sref-active='active'><a ui-sref='app.home'>Home</a></li>
-        <li role="presentation" ui-sref-active='active'><a ui-sref='app.register'>Register</a></li>
-        <li role="presentation" ui-sref-active='active'><a ui-sref='app.login'>Login</a></li>
-        <li role="presentation" ui-sref-active='active'><a ui-sref='app.translate'>Translate</a></li>
+        <li ng-if="!vm.tokenService.has()" role="presentation" ui-sref-active='active'><a ui-sref='app.register'>Register</a></li>
+        <li ng-if="!vm.tokenService.has()" role="presentation" ui-sref-active='active'><a ui-sref='app.login'>Login</a></li>
+        <li role="presentation" ng-if="vm.tokenService.has()" ui-sref-active='active'><a ui-sref='app.translate'>Translate</a></li>
+        <li ng-if="vm.tokenService.has()" role="presentation" ui-sref-active='active' ng-click="vm.logout()"><a>Logout</a></li>    
 
       </ul>
     </div>

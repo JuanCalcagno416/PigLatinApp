@@ -15,4 +15,8 @@ export class TokenService {
 		has () {
 			return !!window.sessionStorage.getItem('X-TOKEN');
 		}
+
+		remove () {
+			window.sessionStorage.removeItem('X-TOKEN');
+		}
 }

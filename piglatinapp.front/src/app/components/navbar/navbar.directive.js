@@ -16,17 +16,16 @@ export function NavbarDirective() {
 }
 
 class NavbarController {
-  constructor (moment, $state) {
+  constructor (moment, $state,TokenService) {
     'ngInject';
     this.state = $state;
-
-    // "this.creationDate" is available by directive option "bindToController: true"
+    this.tokenService = TokenService;
     this.relativeDate = moment(this.creationDate).fromNow();
   }
 
-  greet(){
-    console.log('voy a register');
-    this.state.go("app.register")
+  logout() {
+    this.tokenService.remove();
+    this.state.go('app.login');
   }
 
 }

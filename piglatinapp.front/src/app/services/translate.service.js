@@ -5,12 +5,12 @@ export class TranslateService {
       this.$log = $log;
       this.$http = $http;
       this.apiPostTranslation= 'http://localhost:8080/api/translate';
-      this.apiPostTranslation= 'http://localhost:8080/api/translations';
+      this.apiGetTranslations= 'http://localhost:8080/api/translations';
 
     }
   
-    postTranslation(user) {
-      return this.$http.post(this.apiCreateUser,user)
+    postTranslation(toTranslate) {
+      return this.$http.post(this.apiPostTranslation,toTranslate)
         .then((response) => {
           return response;
         })
@@ -19,8 +19,8 @@ export class TranslateService {
         });
     }
     
-    getUserTranslations(user) {
-        return this.$http.post(this.apiCreateUser,user)
+    getUserTranslations() {
+        return this.$http.get(this.apiGetTranslations)
           .then((response) => {
             return response;
           })

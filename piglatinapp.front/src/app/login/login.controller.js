@@ -1,11 +1,11 @@
 export class LoginController {
-    constructor (toastr, RegisterService,TokenService) {
+    constructor (toastr, RegisterService,TokenService,$state) {
       'ngInject';
   
       this.toastr = toastr;
       this.registerService = RegisterService;
       this.tokenService = TokenService;
-
+      this.state = $state;
     }
 
     access () {
@@ -17,10 +17,18 @@ export class LoginController {
             console.log(response.data.token);
 
             this.tokenService.set(response.data.token)
+            this.showToastr();
+            this.state.go('app.translate')
 
           })
+
+
     }
 
+    showToastr() {
+      this.toastr.success("You've logged in");
+      this.classAnimation = '';
+    }
   
     // register(){
     //   var user = {};

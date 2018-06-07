@@ -1,20 +1,53 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-12 text-center">
-            <h2>Transalte your words here!</h2>
+            <h2>Translate your words here!</h2>
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-xs-6 translate">
             <h3 class="text-center">Write your words</h3>
-            <input type="text" placeholder="Your words here" ng-model="login.user.email"/>
+            <input type="text" placeholder="Your words here" ng-model="translate.translation.text"/>
             <button class="" ng-click="translate.translate()">Translate</button>
-
 
         </div>
         <div class="col-xs-6">
-            <h3 class="text-center">Translations</h3>
+            <h3 class="text-center">Translated words</h3>
+            <p class="text-center">{{translate.newTranslation.oldText}}</p>
+            <p class="text-center">{{translate.newTranslation.newText}}</p>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-xs-12 text-center pd-top">
+            <h2>My translations</h2>
+        </div>
+    </div>
+    <hr>
+
+    <div class='row translate'>
+
+        <div class="col-xs-12 text-center"> 
+            <button  ng-click="translate.getMyTranslations()">Get My Translations</button>
+            <br>
+            <button ng-if="translate.myTranslations.length > 0" ng-click="translate.hideMyTranslations()">Hide my translations</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="" ng-repeat="translation in translate.myTranslations">
+                <div class="list-box">    
+                    <ul>
+                        <li>My old Text:  {{translation.oldText}}</li>
+                        <li>My new Text: {{translation.newText}}</li>
+                    </ul>
+                </div>
+
+            </div>
+         </div>
+    </div>
+
 </div>

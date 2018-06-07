@@ -1,9 +1,10 @@
 export class RegisterController {
-    constructor (toastr, RegisterService) {
+    constructor (toastr, RegisterService,$state) {
       'ngInject';
   
       this.toastr = toastr;
       this.registerService = RegisterService;
+      this.state = $state;
 
     }
 
@@ -12,16 +13,15 @@ export class RegisterController {
       var user = {};
       
       this.registerService.createUser(this.user).then((response)=> {
-        
-        console.log("creating user");
-        console.log(this.user);
-        console.log(response);
-        
-        // response.data.forEach(element => {
-        //   console.log(element);
-        // });
+          this.state.go('app.translate')
+          this.showToastr();
 
       })
+    }
+
+    showToastr() {
+       this.toastr.success("Success creating the account.")
+       this.classAnimation = '';
     }
 
   }

@@ -5,7 +5,7 @@ import config from '../config/config';
 module.exports = {
     
     access: (req,res) => {
-        console.log(req.body)
+          
         User.findOne({"email":req.body.email})
             .then(user => {
                 if(user != null){
@@ -19,7 +19,7 @@ module.exports = {
                                 }
                                 
                                 let token = jwt.sign(payload,config.jwt)
-                                console.log(token)
+                                  
                                 return res.json({
                                     "result":"Success",
                                     "token":token

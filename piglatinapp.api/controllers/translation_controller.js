@@ -10,7 +10,7 @@ module.exports = {
     },
     getTranslationsFromUser: (req,res) => {
 
-        console.log(req.currentUser)
+          
         Translation.find({user_id:req.currentUser.id}).sort({date: 'desc'})
             .then(function (translations) {
                 if(!translations) return res.json({"error":"TranslationsNotFound"})

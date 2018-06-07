@@ -5,7 +5,7 @@ import app      from './config/express'
 mongoose.connect(config.dbUrl, () => {
 
     app.listen(config.port, () => {
-        console.log('Pig Translator API ON, running on port ' + config.port )
+          
     })
     
 })

@@ -1,6 +1,7 @@
 import mongoose     from 'mongoose'
 import bcrypt       from 'bcrypt'
 import validator    from 'validator'
+import Translation         from '../models/translation_model'
 
 const UserSchema = new mongoose.Schema({
     first_name:             {type:String},
@@ -10,6 +11,7 @@ const UserSchema = new mongoose.Schema({
     email_token:            {type:String},
     email_token_expires:    Date,
     password:               {type:String},
+    translations:[{type: mongoose.Schema.ObjectId, ref:'Translation'}],
     created_at: {
     type: Date,
     default: Date.now
@@ -47,6 +49,10 @@ UserSchema.statics = {
         });
 
     },
+
+    getTranslations () {
+
+    }
 }
 
 

@@ -21,12 +21,10 @@ TranslationSchema.statics = {
             if (/\s/.test(textToTranslate)) {
 
                 var splitSentence = textToTranslate.split(/([\s!"#$%&()*+,\.\/:;<=>?@\[\]^_{|}~])/);
-                console.log(splitSentence)
                 // DELETE WHITESPACE IN ARRAY
                 splitSentence = splitSentence.filter(function(str) {
                     return /\S/.test(str);
                 });               
-                console.log(splitSentence)
                 // // ONE WORD WITH WHITESPACES 
                 if(splitSentence.indexOf(textToTranslate.replace(/\s+/g,'')) > -1){
    
@@ -51,9 +49,7 @@ TranslationSchema.statics = {
 
 
     checkLetters: (textToTranslate,{splitSentence,hyphen,user,cb}) => {
-        console.log('En check letters')
-        console.log(textToTranslate)
-        var finalWords = [];
+         var finalWords = [];
         // If its a sentence 
         if(splitSentence != undefined) {
             var newSplitSentence = [];
@@ -82,10 +78,10 @@ TranslationSchema.statics = {
             // CHECKING FOR FIRST LETTER IN WORDS 
             for(var x = 0;x<newSplitSentence.length;x++){
                 if(['a','e','i','o','u'].includes(newSplitSentence[x].toLowerCase().charAt(0))){
-                    Translation.vocalMethod(newSplitSentence[x],{textToTranslate,newSplitSentence,finalWords,hyphen,indexOfHypenWords,user,cb})
+                    Translation.vocalMethod(newSplitSentence[x],{newSplitSentence,finalWords,textToTranslate,hyphen,indexOfHypenWords,user,cb})
                 }else {
 
-                    Translation.consonantMethod(newSplitSentence[x],{textToTranslate,newSplitSentence,finalWords,hyphen,indexOfHypenWords,user,cb})
+                    Translation.consonantMethod(newSplitSentence[x],{newSplitSentence,finalWords,textToTranslate,hyphen,indexOfHypenWords,user,cb})
                 }
                 
             }
@@ -99,7 +95,7 @@ TranslationSchema.statics = {
             }
         }
     },
-    vocalMethod: (word,{textToTranslate,splitSentence,newSplitSentence,finalWords,hyphen,indexOfHypenWords,user,cb}) => {
+    vocalMethod: (word,{splitSentence,newSplitSentence,finalWords,textToTranslate,hyphen,indexOfHypenWords,user,cb}) => {
         // TRANSLATING MORE THAN TWO WORDS WITH VOCALS AT THE BEGINNING
         if(splitSentence != undefined || newSplitSentence != undefined) {
             finalWords.push(word+"way")
@@ -107,33 +103,38 @@ TranslationSchema.statics = {
                 if(splitSentence != undefined){
                     if(splitSentence.length == finalWords.length) {
                         if(hyphen == true){
-                            Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{user,cb});
+                            Translation.saveTranslation(splitSentence,finalWords,textToTranslate,indexOfHypenWords,{user,textToTranslate,cb});
                         }else {
-                            Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{user,cb});
+                            Translation.saveTranslation(splitSentence,finalWords,textToTranslate,indexOfHypenWords,{user,textToTranslate,cb});
                         }
                     }
                 }else {
                     if(newSplitSentence.length == finalWords.length) {
                         if(hyphen == true){
 
-                            Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{user,cb});
+                            Translation.saveTranslation(newSplitSentence,finalWords,textToTranslate,indexOfHypenWords,{user,textToTranslate,cb});
                         }else {
-                            Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{user,cb});
+                            Translation.saveTranslation(newSplitSentence,finalWords,textToTranslate,indexOfHypenWords,{user,textToTranslate,cb});
                         }
                     }
                 }
         // TRANSLATING JUST ONE WORD                
         }else {            
-            finalWords.push(word+'way');
-            if(indexOfHypenWords != undefined){
-                Translation.saveTranslation(word,finalWords,indexOfHypenWords,{user,cb});
+            if(word.toUpperCase() === word) {
+                word = word + 'AY';
             }else {
-                Translation.saveTranslation(word,finalWords[0],indexOfHypenWords,{user,cb});
+                word = word + 'ay';
+            }
+
+            finalWords.push(word);
+            if(indexOfHypenWords != undefined){
+                Translation.saveTranslation(word,finalWords,indexOfHypenWords,{user,word,cb});
+            }else {
+                Translation.saveTranslation(word,finalWords[0],indexOfHypenWords,{user,word,cb});
             }
         }
     },
-    consonantMethod: (word,{textToTranslate,splitSentence,newSplitSentence,finalWords,hyphen,indexOfHypenWords,user,cb}) => {
-
+    consonantMethod: (word,{splitSentence,newSplitSentence,finalWords,textToTranslate,hyphen,indexOfHypenWords,user,cb}) => {
         // TRANSLATING MORE THAN ONE CONSONANT WORD
         if(splitSentence != undefined || newSplitSentence != undefined){
 
@@ -178,9 +179,9 @@ TranslationSchema.statics = {
                 if(splitSentence.length == finalWords.length) {
                     if(hyphen == true){
                         
-                        Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{textToTranslate,user,cb});
+                        Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{user,textToTranslate,cb});
                     }else {
-                        Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{textToTranslate,user,cb});
+                        Translation.saveTranslation(splitSentence,finalWords,indexOfHypenWords,{user,textToTranslate,cb});
                     }
                 }
             }else {
@@ -188,9 +189,9 @@ TranslationSchema.statics = {
                       
                       
                     if(hyphen == true){
-                        Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{textToTranslate,user,cb});
+                        Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{user,textToTranslate,cb});
                     }else {
-                        Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{textToTranslate,user,cb});
+                        Translation.saveTranslation(newSplitSentence,finalWords,indexOfHypenWords,{user,textToTranslate,cb});
                     }
                 }
             }
@@ -237,8 +238,12 @@ TranslationSchema.statics = {
         
             
             // Adding 'ay'
-            word = word + 'ay';
-            Translation.saveTranslation(oldWord,word,indexOfHypenWords,{user,cb});
+            if(word.toUpperCase() === word) {
+                word = word + 'AY';
+            }else {
+                word = word + 'ay';
+            }
+            Translation.saveTranslation(oldWord,word,indexOfHypenWords,{user,word,cb});
         }
     
     },
@@ -246,14 +251,11 @@ TranslationSchema.statics = {
       
         for(var x = 0;x<newString.length;x++){
                     if(/([\s"!*+,.:;?@\)\/<=>\]?@\^_|}~])/.test(newString[x]) ){
-                        console.log('Signo que va a lo ultimo')
-                        newString.splice(x-1,1,newString[x-1] + newString[x])
-                        console.log(newString)
+                        newString.splice(x-1,1,newString[x-1] + newString[x]);
                     }else if(/([\s"#$%&(\\/<=>?@\[\^_{|~])/.test(newString[x])) {
-                        console.log('Signo que va al principio')
-                        newString.splice(x,2, newString[x]+newString[x+1])
+                        newString.splice(x,2, newString[x]+newString[x+1]);
                     }else {
-                        console.log('no es puntuacion')
+                        console.log('no symbols')
                     }
                }
 
@@ -267,15 +269,14 @@ TranslationSchema.statics = {
         return newString;
 
     },
-    saveTranslation: (oldString,newString,indexOfHypenWords,{textToTranslate,user,cb}) => {
+    saveTranslation: (oldString,newString,indexOfHypenWords,{user,textToTranslate,cb}) => {
         console.log('SaveTranslation')
+        console.log(textToTranslate)
         Translation.appendAndClean(newString);
 
         if(indexOfHypenWords != undefined && indexOfHypenWords.length >= 1){
             var minus = 0
-                       console.log('grabando normal primer if')
-                       console.log(indexOfHypenWords)
-                       console.log(newString)
+        
             indexOfHypenWords.length == 1 ? minus = 0 : minus = 1
             
             for(var x = 0;x<indexOfHypenWords.length;x++){
@@ -284,7 +285,7 @@ TranslationSchema.statics = {
                 
             }
                 let translation = new Translation({
-                    oldText:textToTranslate.join(' '),
+                    oldText:textToTranslate,
                     newText:newString.join(' ')
                 });
                 
@@ -299,33 +300,27 @@ TranslationSchema.statics = {
                 })            
 
         }else {
-           console.log('grabando normal')
-           console.log(indexOfHypenWords)
-           console.log(oldString);
-           console.log(newString);
-
+      
             if(indexOfHypenWords != undefined && indexOfHypenWords.length >= 1) {
                 var translation = new Translation({
-                    oldText:textToTranslate.join('-').toLowerCase(),
+                    oldText:oldString.join('-').toLowerCase(),
                     newText:newString.join('-').toLowerCase()
                 });
 
             }else {
-                console.log('grabando normal segundo if')
-                console.log(newString)    
-                console.log(newString.length)
+         
                 var x = 0;
 
                 console.log(Array.isArray(newString))
                 if(Array.isArray(newString)){
 
                     var translation = new Translation({
-                        oldText:oldString.join(' '),
+                        oldText:textToTranslate,
                         newText:newString.join(' ')
                     });
                 }else {
                     var translation = new Translation({
-                        oldText:textToTranslate,
+                        oldText:oldString,
                         newText:newString
                     });
                 }
